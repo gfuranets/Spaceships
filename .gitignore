@@ -39,3 +39,10 @@
 
 # debug information files
 *.dwo
+
+# ignore folders and files
+.vs/
+bin/
+out/
+CMakeLists.txt
+description.txt
