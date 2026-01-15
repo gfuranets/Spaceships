@@ -1,11 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <iostream>
 
 #include "ship.h"
 #include "bullet.h"
 
 Ship::Ship(sf::Texture& texture, sf::RenderWindow& window, float X, float Y)
-    : ship(texture), vel(250.f), alpha(sf::degrees(0.f)), angularVel(sf::degrees(180.f))
+    : ship(texture), vel(0.f    ), alpha(sf::degrees(0.f)), angularVel(sf::degrees(180.f)), x(X), y(Y)
 {
     sf::Vector2u shipSize = ship.getTexture().getSize();
 
@@ -19,7 +20,7 @@ Ship::Ship(sf::Texture& texture, sf::RenderWindow& window, float X, float Y)
     width = shipSize.x * ship.getScale().x;
     height = shipSize.y * ship.getScale().y;
 
-    ship.setPosition({ X, Y });
+    ship.setPosition({ x, y });
 }
 
 void Ship::move(sf::Time dt) 
@@ -38,25 +39,27 @@ void Ship::rotate(sf::Time dt)
     ship.setRotation(alpha);
 }
 
+/*
 void Ship::exitWindow(sf::RenderWindow& window)
 {
     float x = ship.getPosition().x, y = ship.getPosition().y;
     unsigned int windowWidth = window.getSize().x, windowHeight = window.getSize().y;
 
-    if (x < -width / 2.f) ship.setPosition({ windowWidth + width / 2.f, y });
-    if (x > windowWidth + width / 2.f) ship.setPosition({ -width / 2.f, y });
-    if (y < -height / 2.f) ship.setPosition({ x, windowHeight + height / 2.f });
-    if (y > windowHeight + height / 2.f) ship.setPosition({ x, -height / 2.f });
+    if (x <= -width / 2.f) ship.setPosition({ windowWidth + width / 2.f, y });
+    else if (x >= windowWidth + width / 2.f) ship.setPosition({ -width / 2.f, y });
+    if (y <= -height / 2.f) ship.setPosition({ x, windowHeight + height / 2.f });
+    else if (y >= windowHeight + height / 2.f) ship.setPosition({ x, -height / 2.f });
 }
+*/
 
 void Ship::update(sf::RenderWindow &window, sf::Time dt) 
 { 
+    //exitWindow(window);
     move(dt);
-    rotate(dt);
-    exitWindow(window);
+    rotate(dt); 
 }  
 
-void Ship::shoot(std::vector<Bullet*> &bullets, sf::RenderWindow &window, sf::Texture &bulletTexture) 
+void Ship::shoot(std::vector<Bullet*> &bullets, sf::RenderWindow &window, sf::Texture &bulletTexture) const
 {
     float x = ship.getPosition().x, y = ship.getPosition().y;
     sf::Angle angle = ship.getRotation();

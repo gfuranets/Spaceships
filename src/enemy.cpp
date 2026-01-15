@@ -5,7 +5,8 @@
 #include "ship.h"
 
 Enemy::Enemy(sf::Texture& texture, sf::RenderWindow& window, float X, float Y) :
-	Ship(texture, window, X, Y), collided(false) {}
+	Ship(texture, window, X, Y), collided(false) 
+{ }
 
 /*
 void Enemy::bulletCollision(std::vector<Bullet*>& bullets)

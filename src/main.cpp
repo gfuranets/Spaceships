@@ -14,33 +14,23 @@ int main() {
 				  sf::Style::Default,
 				  sf::State::Windowed);
 
-	sf::Vector2u windowSize(window.getSize().x, window.getSize().y);
-
 	sf::Clock clock;
 	srand(2);
 
-	sf::Texture playerTexture;
+	sf::Texture playerTexture, enemyTexture, bulletTexture;
 	playerTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/player.png");
-
+	enemyTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/enemy.png");
+	bulletTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/bullet.png");
 
 	// Player player(playerTexture, windowSize, windowSize.x / 2.f, windowSize.y / 2.f);
-	Player player(playerTexture, window, windowSize.x / 2.f, windowSize.y / 2.f);
-
-
-
-	sf::Texture enemyTexture;
-	enemyTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/enemy.png");
+	Player player(playerTexture, window, static_cast<float>(window.getSize().x) / 2.f, static_cast<float>(window.getSize().y) / 2.f);
+	std::cout << player.x << " " << player.y << "\n";
 
 	std::vector<Enemy*> enemies;
 	for (int i = 1; i <= 3; i++)
 		enemies.push_back(new Enemy(enemyTexture, window, i * 100.f, i * 150.f));
 
-
-	sf::Texture bulletTexture;
-	bulletTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/bullet.png");
-
 	std::vector<Bullet*> bullets;
-
 
 	// GAME LOOP
 	while (window.isOpen())
@@ -124,7 +114,7 @@ int main() {
 
 		player.update(window, dt);
 
-		// std::cout << "x: " << player.ship.getPosition().x << " y: " << player.ship.getPosition().y << " alpha: " << player.ship.getRotation().asDegrees() << "\n";
+		std::cout << "x: " << player.ship.getPosition().x << " y: " << player.ship.getPosition().y << " alpha: " << player.ship.getRotation().asDegrees() << "\n";
 		//std::cout << bullets.size() << "\n";
 		player.draw(window);
 
@@ -139,4 +129,8 @@ int main() {
 
 		window.display();
 	}	
+
+	for (auto& enemy : enemies) delete enemy;
+	for (auto& bullet : bullets) delete bullet;
+	return 0;
 }
