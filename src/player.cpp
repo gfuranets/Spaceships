@@ -4,7 +4,7 @@
 #include "ship.h"
 
 Player::Player(sf::Texture& texture, sf::RenderWindow& window, float X, float Y) :
-	Ship(texture, window, X, Y)
+	Ship(texture, window, X, Y), alpha(sf::degrees(0.f)), hp(100)
 {
 
 };

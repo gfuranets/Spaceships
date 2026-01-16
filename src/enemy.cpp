@@ -8,20 +8,6 @@ Enemy::Enemy(sf::Texture& texture, sf::RenderWindow& window, float X, float Y) :
 	Ship(texture, window, X, Y), collided(false) 
 { }
 
-/*
-void Enemy::bulletCollision(std::vector<Bullet*>& bullets)
-{
-	for (auto& bullet : bullets)
-	{
-		if (ship.getGlobalBounds().findIntersection(bullet->bullet.getGlobalBounds()))
-		{
-			bullet->collided = true;
-			collided = true;
-		}
-	}
-}
-*/
-
 void Enemy::bulletCollision(std::vector<Bullet*>& bullets)
 {
 	for (auto& bullet : bullets)

@@ -6,7 +6,7 @@
 #include "bullet.h"
 
 Ship::Ship(sf::Texture& texture, sf::RenderWindow& window, float X, float Y)
-    : ship(texture), vel(0.f    ), alpha(sf::degrees(0.f)), angularVel(sf::degrees(180.f)), x(X), y(Y)
+    : ship(texture), vel(200.f), alpha(sf::degrees(0.f)), angularVel(sf::degrees(180.f)), x(X), y(Y)
 {
     sf::Vector2u shipSize = ship.getTexture().getSize();
 
@@ -25,10 +25,10 @@ Ship::Ship(sf::Texture& texture, sf::RenderWindow& window, float X, float Y)
 
 void Ship::move(sf::Time dt) 
 {
-    float alphaRads = alpha.asRadians(), t = dt.asSeconds();
-    sf::Vector2f direction({ std::cos(alphaRads), std::sin(alphaRads) });
+    float directionRads = direction.asRadians(), t = dt.asSeconds();
+    sf::Vector2f dir({ std::cos(directionRads), std::sin(directionRads) });
 
-    ship.move({ direction * vel * t });
+    ship.move({ dir * vel * t });
 }
 
 void Ship::rotate(sf::Time dt) 
@@ -61,10 +61,11 @@ void Ship::update(sf::RenderWindow &window, sf::Time dt)
 
 void Ship::shoot(std::vector<Bullet*> &bullets, sf::RenderWindow &window, sf::Texture &bulletTexture) const
 {
-    float x = ship.getPosition().x, y = ship.getPosition().y;
+    float dir = ship.getRotation().asRadians();
+    float spawnX = ship.getPosition().x + width * std::cos(dir) / 2.f, spawnY = ship.getPosition().y + width * std::sin(dir) / 2.f;
     sf::Angle angle = ship.getRotation();
     
-    bullets.push_back(new Bullet(bulletTexture, window, x, y, angle));
+    bullets.push_back(new Bullet(bulletTexture, window, spawnX, spawnY, angle));
 }
 
 void Ship::draw(sf::RenderWindow& window)

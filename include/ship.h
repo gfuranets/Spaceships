@@ -9,7 +9,7 @@ class Ship {
 public:
     float vel, x, y;
     unsigned int width, height;
-    sf::Angle alpha, angularVel;
+    sf::Angle direction, alpha, angularVel;
     sf::Sprite ship;
 
     explicit Ship(sf::Texture& texture, sf::RenderWindow& window, float X, float Y);

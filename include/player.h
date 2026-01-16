@@ -9,10 +9,9 @@ class Player : public Ship
 {
 public:
 	int hp;
+	sf::Angle alpha;
 
 	explicit Player(sf::Texture& texture, sf::RenderWindow& window, float X, float Y);
-
-
 };
 
 #endif
