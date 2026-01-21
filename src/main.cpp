@@ -6,14 +6,14 @@
 #include "player.h"
 #include "enemy.h"
 #include "bullet.h"
-#include "updateFunctions.h"
+#include "gameLogic.h"
 
 int main() {
 	sf::RenderWindow window;
 	window.create(sf::VideoMode({ 1200, 900 }),
-				  "Spaceships",
-				  sf::Style::Default,
-				  sf::State::Windowed);
+					"Spaceships",
+					sf::Style::Default,
+					sf::State::Windowed);
 
 	sf::Clock clock;
 	srand(2);
@@ -26,8 +26,8 @@ int main() {
 
 	// GAME OBJECTS
 	Player player(playerTexture, window, static_cast<float>(window.getSize().x) / 2.f, static_cast<float>(window.getSize().y) / 2.f);
-	std::vector<Enemy*> enemies;
-	std::vector<Bullet*> bullets;
+	std::vector<std::unique_ptr<Enemy>> enemies;
+	std::vector<std::unique_ptr<Bullet>> bullets;
 
 	// GAME LOOP
 	while (window.isOpen())
@@ -43,14 +43,14 @@ int main() {
 				if (pressedKey->scancode == sf::Keyboard::Scancode::Escape)
 					window.close();
 
-				if (pressedKey->scancode == sf::Keyboard::Scancode::Space) {
+				if (pressedKey->scancode == sf::Keyboard::Scancode::Space) 
 					player.shoot(bullets, window, bulletTexture);
-				}
+				
 
 				if (pressedKey->scancode == sf::Keyboard::Scancode::C)
 				{
 					float X = static_cast<float>(rand() % window.getSize().x), Y = static_cast<float>(rand() % window.getSize().y);
-					enemies.push_back(new Enemy(enemyTexture, window, X, Y));
+					enemies.push_back(std::make_unique<Enemy>(enemyTexture, window, X, Y));
 				}
 			}
 		}
@@ -79,28 +79,23 @@ int main() {
 		sf::Time dt = clock.restart();
 
 		player.update(window, dt);
-		handleEnemyLogic(enemies, dt);
-		handleBulletLogic(bullets, window, dt);
-
+		enemyUpdate(enemies, bullets);
+		bulletUpdate(window, dt, bullets);
+		
 		// DISPLAYING
 
 		window.clear(sf::Color::Black);	
-		//std::cout << "x: " << player.ship.getPosition().x << " y: " << player.ship.getPosition().y << " alpha: " << player.ship.getRotation().asDegrees() << "\n";
-		//std::cout << bullets.size() << "\n";
+		std::cout << "x: " << player.ship.getPosition().x << " y: " << player.ship.getPosition().y << " alpha: " << player.ship.getRotation().asDegrees() << "\n";
 		
 		player.draw(window);
+		drawEntities(window, enemies, bullets);
 
-		for (auto& enemy : enemies)
-			enemy->draw(window);
-
-		for (auto& bullet : bullets)
-			bullet->draw(window);
+		// std::cout << player.width << " " << player.height << "\n";
 
 		// std::cout << "enemy count: " << enemies.size() << "\n";
 
 		window.display();
 	}	
 
-	clearObjects(enemies, bullets);
 	return 0;
 }

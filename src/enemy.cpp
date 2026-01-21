@@ -1,14 +1,16 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <cmath>
 
 #include "enemy.h"
 #include "ship.h"
+#include "player.h"
 
 Enemy::Enemy(sf::Texture& texture, sf::RenderWindow& window, float X, float Y) :
 	Ship(texture, window, X, Y), collided(false) 
 { }
 
-void Enemy::bulletCollision(std::vector<Bullet*>& bullets)
+void Enemy::bulletCollision(std::vector<std::unique_ptr<Bullet>>& bullets)
 {
 	for (auto& bullet : bullets)
 	{
@@ -23,4 +25,14 @@ void Enemy::bulletCollision(std::vector<Bullet*>& bullets)
 			collided = true;
 		}
 	}
+}
+
+void Enemy::trackPlayer(Player& player)
+{
+	sf::Vector2f playerPos = player.ship.getPosition();
+	sf::Vector2f enemyPos = ship.getPosition();
+
+	sf::Vector2f d = playerPos - enemyPos;
+	sf::Angle dir = sf::radians(std::atan2(d.y, d.x));
+	direction = dir;
 }

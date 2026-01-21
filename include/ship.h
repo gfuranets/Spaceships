@@ -7,8 +7,7 @@
 
 class Ship {
 public:
-    float vel, x, y;
-    unsigned int width, height;
+    float vel, x, y, width, height;
     sf::Angle direction, alpha, angularVel;
     sf::Sprite ship;
 
@@ -16,9 +15,9 @@ public:
 
     void move(sf::Time dt);
     void rotate(sf::Time dt);
-    // void exitWindow(sf::RenderWindow& window);
+    void exitWindow(sf::RenderWindow& window);
     void update(sf::RenderWindow& window, sf::Time dt);
-    void shoot(std::vector<Bullet*>& bullets, sf::RenderWindow& window, sf::Texture& bulletTexture) const;
+    void shoot(std::vector<std::unique_ptr<Bullet>>& bullets, sf::RenderWindow& window, sf::Texture& bulletTexture) const;
     void draw(sf::RenderWindow& window);
 };
 

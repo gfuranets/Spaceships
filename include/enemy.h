@@ -3,8 +3,10 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <cmath>
 
 #include "ship.h"
+#include "player.h"
 
 class Enemy : public Ship {
 public:
@@ -12,7 +14,8 @@ public:
 
 	explicit Enemy(sf::Texture& texture, sf::RenderWindow& window, float X, float Y);
 
-	void bulletCollision(std::vector<Bullet*>& bullets);
+	void bulletCollision(std::vector<std::unique_ptr<Bullet>>& bullets);
+	void trackPlayer(Player& player);
 };
 
 #endif

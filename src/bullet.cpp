@@ -1,3 +1,5 @@
+#include <SFML/Graphics.hpp>
+
 #include "bullet.h"
 
 Bullet::Bullet(sf::Texture& texture, sf::RenderWindow &window, float X, float Y, sf::Angle angle) :
@@ -17,7 +19,8 @@ Bullet::Bullet(sf::Texture& texture, sf::RenderWindow &window, float X, float Y,
 	bullet.setPosition({ x, y });
 }
 
-bool Bullet::exited(sf::RenderWindow& window) {
+bool Bullet::exited(sf::RenderWindow& window) 
+{
 	float x = bullet.getPosition().x, y = bullet.getPosition().y;
 	unsigned int windowWidth = window.getSize().x, windowHeight = window.getSize().y;
 
@@ -30,13 +33,15 @@ bool Bullet::exited(sf::RenderWindow& window) {
 	return false;
 }
 
-void Bullet::move(sf::Time dt) {
+void Bullet::move(sf::Time dt) 
+{
 	float angle = alpha.asRadians(), t = dt.asSeconds();
 
 	sf::Vector2f direction({ std::cos(angle), std::sin(angle) });
 	bullet.move(direction * vel * t);
 }
 
-void Bullet::draw(sf::RenderWindow &window) {
+void Bullet::draw(sf::RenderWindow &window) 
+{
 	window.draw(bullet);
 }
