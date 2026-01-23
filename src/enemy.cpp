@@ -7,8 +7,17 @@
 #include "player.h"
 
 Enemy::Enemy(sf::Texture& texture, sf::RenderWindow& window, float X, float Y) :
-	Ship(texture, window, X, Y), collided(false) 
-{ }
+	Ship(texture, window, X, Y), collided(false)
+{
+	vel = 50.f;
+}
+
+void Enemy::move(sf::Time dt) 
+{
+	float dirRads = alpha.asRadians(), t = dt.asSeconds();
+	sf::Vector2f dir({ std::cos(dirRads), std::sin(dirRads) });
+	ship.move({ dir * vel * t });
+}
 
 void Enemy::bulletCollision(std::vector<std::unique_ptr<Bullet>>& bullets)
 {
@@ -27,12 +36,30 @@ void Enemy::bulletCollision(std::vector<std::unique_ptr<Bullet>>& bullets)
 	}
 }
 
-void Enemy::trackPlayer(Player& player)
+void Enemy::getPlayerOrientation(Player& player)
 {
-	sf::Vector2f playerPos = player.ship.getPosition();
-	sf::Vector2f enemyPos = ship.getPosition();
+	float xP = player.ship.getPosition().x, yP = player.ship.getPosition().y;
+	float xE = ship.getPosition().x, yE = ship.getPosition().y;
 
-	sf::Vector2f d = playerPos - enemyPos;
-	sf::Angle dir = sf::radians(std::atan2(d.y, d.x));
-	direction = dir;
+	float orientation = std::atan2((yP - yE), (xP - xE));
+	float dir = alpha.asRadians();
+	float diff = orientation - dir;
+
+	if (std::abs(diff) < 0.05f)
+	{
+		angularVel = sf::radians(0.f);
+	}
+	else
+	{
+		if (diff > 0) angularVel = sf::degrees(120.f);
+		else angularVel = sf::degrees(-120.f);
+	}
+	
+}
+
+void Enemy::update(sf::RenderWindow& window, sf::Time dt, Player& player, std::vector<std::unique_ptr<Bullet>>& bullets)
+{
+	getPlayerOrientation(player);
+	bulletCollision(bullets);
+	Ship::update(window, dt);
 }

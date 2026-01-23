@@ -19,10 +19,11 @@ int main() {
 	srand(2);
 
 	// TEXTURES
-	sf::Texture playerTexture, enemyTexture, bulletTexture;
+	sf::Texture playerTexture, enemyTexture, playerBulletTexture, enemyBulletTexture;
 	playerTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/player.png");
 	enemyTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/enemy.png");
-	bulletTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/bullet.png");
+	playerBulletTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/playerBullet.png");
+	enemyBulletTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/enemyBullet.png");
 
 	// GAME OBJECTS
 	Player player(playerTexture, window, static_cast<float>(window.getSize().x) / 2.f, static_cast<float>(window.getSize().y) / 2.f);
@@ -44,15 +45,14 @@ int main() {
 					window.close();
 
 				if (pressedKey->scancode == sf::Keyboard::Scancode::Space) 
-					player.shoot(bullets, window, bulletTexture);
-				
-
-				if (pressedKey->scancode == sf::Keyboard::Scancode::C)
-				{
-					float X = static_cast<float>(rand() % window.getSize().x), Y = static_cast<float>(rand() % window.getSize().y);
-					enemies.push_back(std::make_unique<Enemy>(enemyTexture, window, X, Y));
-				}
+					player.shoot(bullets, window, playerBulletTexture);
 			}
+		}
+
+		while (enemies.size() < 5)
+		{
+			float X = static_cast<float>(rand() % window.getSize().x), Y = static_cast<float>(rand() % window.getSize().y);
+			enemies.push_back(std::make_unique<Enemy>(enemyTexture, window, X, Y));
 		}
 
 		// PLAYER MOVEMENT LOGIC
@@ -72,20 +72,19 @@ int main() {
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ||
 			sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-			player.direction = player.ship.getRotation();
-		
+			player.direction = player.ship.getRotation();	
 
 		// GAME LOGIC
 		sf::Time dt = clock.restart();
 
 		player.update(window, dt);
-		enemyUpdate(enemies, bullets);
+		enemyUpdate(enemies, bullets, player, window, dt);
 		bulletUpdate(window, dt, bullets);
 		
 		// DISPLAYING
 
 		window.clear(sf::Color::Black);	
-		std::cout << "x: " << player.ship.getPosition().x << " y: " << player.ship.getPosition().y << " alpha: " << player.ship.getRotation().asDegrees() << "\n";
+		// std::cout << "x: " << player.ship.getPosition().x << " y: " << player.ship.getPosition().y << " alpha: " << player.ship.getRotation().asDegrees() << "\n";
 		
 		player.draw(window);
 		drawEntities(window, enemies, bullets);

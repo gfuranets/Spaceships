@@ -6,7 +6,7 @@
 #include "bullet.h"
 
 Ship::Ship(sf::Texture& texture, sf::RenderWindow& window, float X, float Y)
-    : ship(texture), vel(300.f), alpha(sf::degrees(0.f)), direction(sf::degrees(0.f)), angularVel(sf::degrees(180.f)), x(X), y(Y)
+    : ship(texture), vel(300.f), alpha(sf::degrees(0.f)), angularVel(sf::degrees(0.f))
 {
     sf::Vector2u shipSize = ship.getTexture().getSize();
 
@@ -20,16 +20,10 @@ Ship::Ship(sf::Texture& texture, sf::RenderWindow& window, float X, float Y)
     width = static_cast<float>(shipSize.x * ship.getScale().x);
     height = static_cast<float>(shipSize.y * ship.getScale().y);
 
-    ship.setPosition({ x, y });
+    ship.setPosition({ X, Y });
 }
 
-void Ship::move(sf::Time dt) 
-{
-    float directionRads = direction.asRadians(), t = dt.asSeconds();
-    sf::Vector2f dir({ std::cos(directionRads), std::sin(directionRads) });
-
-    ship.move({ dir * vel * t });
-}
+// virtual void Ship::move(sf::Time dt) - default;
 
 void Ship::rotate(sf::Time dt) 
 {
@@ -52,7 +46,7 @@ void Ship::exitWindow(sf::RenderWindow& window)
 
     if (y > windowHeight + height / 2.f)
         y = -height / 2.f;
-    else if (y < -width / 2.f)
+    else if (y < -height / 2.f)
         y = windowHeight + height / 2.f;
 
     ship.setPosition({ x, y });

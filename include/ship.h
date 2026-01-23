@@ -5,18 +5,22 @@
 
 #include "bullet.h"
 
-class Ship {
+class Ship 
+{
 public:
-    float vel, x, y, width, height;
-    sf::Angle direction, alpha, angularVel;
+    float vel, width, height;
+    sf::Angle alpha, angularVel;
     sf::Sprite ship;
 
     explicit Ship(sf::Texture& texture, sf::RenderWindow& window, float X, float Y);
 
-    void move(sf::Time dt);
+    virtual void move(sf::Time dt) = 0;
+    virtual ~Ship() = default;
+
     void rotate(sf::Time dt);
     void exitWindow(sf::RenderWindow& window);
     void update(sf::RenderWindow& window, sf::Time dt);
+
     void shoot(std::vector<std::unique_ptr<Bullet>>& bullets, sf::RenderWindow& window, sf::Texture& bulletTexture) const;
     void draw(sf::RenderWindow& window);
 };

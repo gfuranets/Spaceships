@@ -8,14 +8,20 @@
 #include "ship.h"
 #include "player.h"
 
-class Enemy : public Ship {
+class Enemy : public Ship 
+{
 public:
 	bool collided;
 
 	explicit Enemy(sf::Texture& texture, sf::RenderWindow& window, float X, float Y);
 
+	void move(sf::Time dt) override;
+
 	void bulletCollision(std::vector<std::unique_ptr<Bullet>>& bullets);
-	void trackPlayer(Player& player);
+
+	void getPlayerOrientation(Player& player);
+
+	void update(sf::RenderWindow& window, sf::Time dt, Player& player, std::vector<std::unique_ptr<Bullet>>& bullets);
 };
 
 #endif

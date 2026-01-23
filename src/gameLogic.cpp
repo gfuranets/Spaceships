@@ -4,8 +4,9 @@
 #include "gameLogic.h"
 #include "enemy.h"
 #include "bullet.h"
+#include "player.h"
 
-void enemyUpdate(std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Bullet>>& bullets)
+void enemyUpdate(std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Bullet>>& bullets, Player& player, sf::RenderWindow& window, sf::Time dt)
 {
 	for (auto enemy = enemies.begin(); enemy != enemies.end();)
 	{
@@ -16,9 +17,7 @@ void enemyUpdate(std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::
 		}
 		else
 		{
-			// (*enemy)->trackPlayer(player);
-			(*enemy)->bulletCollision(bullets);
-			// (*enemy)->move(dt);
+			(*enemy)->update(window, dt, player, bullets);
 			++enemy;
 		}
 	}
