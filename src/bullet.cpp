@@ -2,8 +2,8 @@
 
 #include "bullet.h"
 
-Bullet::Bullet(sf::Texture& texture, sf::RenderWindow &window, float X, float Y, sf::Angle angle) :
-	bullet(texture), size(0.15f), x(X), y(Y), vel(600.f), alpha(angle), collided(false)
+Bullet::Bullet(sf::Texture& texture, sf::RenderWindow &window, float X, float Y, sf::Angle angle, float velocity) :
+	bullet(texture), size(0.15f), x(X), y(Y), vel(velocity), alpha(angle), collided(false)
 {
 	sf::Vector2u bulletSize = bullet.getTexture().getSize();
 

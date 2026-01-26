@@ -6,8 +6,8 @@
 #include "ship.h"
 #include "player.h"
 
-Enemy::Enemy(sf::Texture& texture, sf::RenderWindow& window, float X, float Y) :
-	Ship(texture, window, X, Y), collided(false)
+Enemy::Enemy(sf::RenderWindow& window, sf::Texture& texture, float X, float Y) :
+	Ship(window, texture, X, Y), collided(false)
 {
 	vel = 50.f;
 }
@@ -19,9 +19,9 @@ void Enemy::move(sf::Time dt)
 	ship.move({ dir * vel * t });
 }
 
-void Enemy::bulletCollision(std::vector<std::unique_ptr<Bullet>>& bullets)
+void Enemy::bulletCollision(std::vector<std::unique_ptr<Bullet>>& playerBullets)
 {
-	for (auto& bullet : bullets)
+	for (auto& bullet : playerBullets)
 	{
 		float xE = ship.getPosition().x, yE = ship.getPosition().y;
 		float xB = bullet->bullet.getPosition().x, yB = bullet->bullet.getPosition().y;
@@ -36,7 +36,7 @@ void Enemy::bulletCollision(std::vector<std::unique_ptr<Bullet>>& bullets)
 	}
 }
 
-void Enemy::getPlayerOrientation(Player& player)
+void Enemy::getPlayerOrientation(sf::RenderWindow& window, Player& player, std::vector<std::unique_ptr<Bullet>>& enemyBullets, sf::Texture& enemyBulletTexture)
 {
 	float xP = player.ship.getPosition().x, yP = player.ship.getPosition().y;
 	float xE = ship.getPosition().x, yE = ship.getPosition().y;
@@ -45,21 +45,26 @@ void Enemy::getPlayerOrientation(Player& player)
 	float dir = alpha.asRadians();
 	float diff = orientation - dir;
 
+	float pi = sf::degrees(180.f).asRadians();
+	while (diff < pi) diff += 2.f * pi;
+	while (diff > pi) diff -= 2.f * pi;
+
 	if (std::abs(diff) < 0.05f)
 	{
 		angularVel = sf::radians(0.f);
+		shoot(window, enemyBullets, enemyBulletTexture, ENEMY_BULLET_VEL);
 	}
 	else
 	{
-		if (diff > 0) angularVel = sf::degrees(120.f);
-		else angularVel = sf::degrees(-120.f);
+		if (diff > 0) angularVel = sf::degrees(25.f);
+		else angularVel = sf::degrees(-25.f);
 	}
 	
 }
 
-void Enemy::update(sf::RenderWindow& window, sf::Time dt, Player& player, std::vector<std::unique_ptr<Bullet>>& bullets)
+void Enemy::update(sf::RenderWindow& window, sf::Time dt, Player& player, std::vector<std::unique_ptr<Bullet>>& playerBullets, std::vector<std::unique_ptr<Bullet>>& enemyBullets, sf::Texture& enemyBulletTexture)
 {
-	getPlayerOrientation(player);
-	bulletCollision(bullets);
+	getPlayerOrientation(window, player, enemyBullets, enemyBulletTexture);
+	bulletCollision(playerBullets);
 	Ship::update(window, dt);
 }

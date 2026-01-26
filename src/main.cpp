@@ -3,12 +3,14 @@
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
 
+#include "constants.h"
 #include "player.h"
 #include "enemy.h"
 #include "bullet.h"
 #include "gameLogic.h"
 
-int main() {
+int main() 
+{
 	sf::RenderWindow window;
 	window.create(sf::VideoMode({ 1200, 900 }),
 					"Spaceships",
@@ -25,10 +27,11 @@ int main() {
 	playerBulletTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/playerBullet.png");
 	enemyBulletTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/enemyBullet.png");
 
-	// GAME OBJECTS
-	Player player(playerTexture, window, static_cast<float>(window.getSize().x) / 2.f, static_cast<float>(window.getSize().y) / 2.f);
+	// INITIALIZING GAME ENTITIES
+	Player player(window, playerTexture, static_cast<float>(window.getSize().x) / 2.f, static_cast<float>(window.getSize().y) / 2.f);
 	std::vector<std::unique_ptr<Enemy>> enemies;
-	std::vector<std::unique_ptr<Bullet>> bullets;
+	std::vector<std::unique_ptr<Bullet>> playerBullets;
+	std::vector<std::unique_ptr<Bullet>> enemyBullets;
 
 	// GAME LOOP
 	while (window.isOpen())
@@ -45,14 +48,15 @@ int main() {
 					window.close();
 
 				if (pressedKey->scancode == sf::Keyboard::Scancode::Space) 
-					player.shoot(bullets, window, playerBulletTexture);
+					player.shoot(window, playerBullets, playerBulletTexture);
 			}
 		}
 
+		// refresh enemies
 		while (enemies.size() < 5)
 		{
 			float X = static_cast<float>(rand() % window.getSize().x), Y = static_cast<float>(rand() % window.getSize().y);
-			enemies.push_back(std::make_unique<Enemy>(enemyTexture, window, X, Y));
+			enemies.push_back(std::make_unique<Enemy>(window, enemyTexture, X, Y));
 		}
 
 		// PLAYER MOVEMENT LOGIC
@@ -78,8 +82,9 @@ int main() {
 		sf::Time dt = clock.restart();
 
 		player.update(window, dt);
-		enemyUpdate(enemies, bullets, player, window, dt);
-		bulletUpdate(window, dt, bullets);
+		enemyUpdate(window, dt, player, enemies, playerBullets, enemyBullets, enemyBulletTexture);
+		bulletUpdate(window, dt, playerBullets);
+		bulletUpdate(window, dt, enemyBullets);
 		
 		// DISPLAYING
 
@@ -87,7 +92,7 @@ int main() {
 		// std::cout << "x: " << player.ship.getPosition().x << " y: " << player.ship.getPosition().y << " alpha: " << player.ship.getRotation().asDegrees() << "\n";
 		
 		player.draw(window);
-		drawEntities(window, enemies, bullets);
+		drawEntities(window, enemies, playerBullets, enemyBullets);
 
 		// std::cout << player.width << " " << player.height << "\n";
 

@@ -3,8 +3,8 @@
 #include "player.h"
 #include "ship.h"
 
-Player::Player(sf::Texture& texture, sf::RenderWindow& window, float X, float Y) :
-	Ship(texture, window, X, Y), direction(sf::degrees(0.f)), hp(100)
+Player::Player(sf::RenderWindow& window, sf::Texture& playerTexture, float X, float Y) :
+	Ship(window, playerTexture, X, Y), direction(sf::degrees(0.f)), hp(100)
 {
 	
 };

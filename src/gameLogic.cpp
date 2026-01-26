@@ -6,7 +6,7 @@
 #include "bullet.h"
 #include "player.h"
 
-void enemyUpdate(std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Bullet>>& bullets, Player& player, sf::RenderWindow& window, sf::Time dt)
+void enemyUpdate(sf::RenderWindow& window, sf::Time dt, Player& player, std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Bullet>>& playerBullets, std::vector<std::unique_ptr<Bullet>>& enemyBullets, sf::Texture& enemyBulletTexture)
 {
 	for (auto enemy = enemies.begin(); enemy != enemies.end();)
 	{
@@ -17,7 +17,7 @@ void enemyUpdate(std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::
 		}
 		else
 		{
-			(*enemy)->update(window, dt, player, bullets);
+			(*enemy)->update(window, dt, player, playerBullets, enemyBullets, enemyBulletTexture);
 			++enemy;
 		}
 	}
@@ -40,8 +40,9 @@ void bulletUpdate(sf::RenderWindow& window, sf::Time dt, std::vector<std::unique
 	}
 }
 
-void drawEntities(sf::RenderWindow& window, std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Bullet>>& bullets)
+void drawEntities(sf::RenderWindow& window, std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Bullet>>& playerBullets, std::vector<std::unique_ptr<Bullet>>& enemyBullets)
 {
 	for (auto& enemy : enemies) enemy->draw(window);
-	for (auto& bullet : bullets) bullet->draw(window);
+	for (auto& playerBullet : playerBullets) playerBullet->draw(window);
+	for (auto& enemyBullet : enemyBullets) enemyBullet->draw(window);
 }

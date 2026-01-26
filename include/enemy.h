@@ -13,15 +13,12 @@ class Enemy : public Ship
 public:
 	bool collided;
 
-	explicit Enemy(sf::Texture& texture, sf::RenderWindow& window, float X, float Y);
+	explicit Enemy(sf::RenderWindow& window, sf::Texture& texture, float X, float Y);
 
 	void move(sf::Time dt) override;
-
-	void bulletCollision(std::vector<std::unique_ptr<Bullet>>& bullets);
-
-	void getPlayerOrientation(Player& player);
-
-	void update(sf::RenderWindow& window, sf::Time dt, Player& player, std::vector<std::unique_ptr<Bullet>>& bullets);
+	void bulletCollision(std::vector<std::unique_ptr<Bullet>>& playerBullets);
+	void getPlayerOrientation(sf::RenderWindow& window, Player& player, std::vector<std::unique_ptr<Bullet>>& enemyBullets, sf::Texture& enemyBulletTexture);
+	void update(sf::RenderWindow& window, sf::Time dt, Player& player, std::vector<std::unique_ptr<Bullet>>& playerBullets, std::vector<std::unique_ptr<Bullet>>& enemyBullets, sf::Texture& enemyBulletTexture);
 };
 
 #endif

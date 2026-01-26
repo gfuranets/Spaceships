@@ -10,7 +10,7 @@ public:
 	sf::Angle alpha;
 	sf::Sprite bullet;
 
-	Bullet(sf::Texture& texture, sf::RenderWindow &window, float X, float Y, sf::Angle angle);
+	Bullet(sf::Texture& texture, sf::RenderWindow &window, float X, float Y, sf::Angle angle, float velocity);
 
 	bool exited(sf::RenderWindow& window);
 	void move(sf::Time dt);

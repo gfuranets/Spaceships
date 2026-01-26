@@ -5,7 +5,7 @@
 #include "ship.h"
 #include "bullet.h"
 
-Ship::Ship(sf::Texture& texture, sf::RenderWindow& window, float X, float Y)
+Ship::Ship(sf::RenderWindow& window, sf::Texture& texture, float X, float Y)
     : ship(texture), vel(300.f), alpha(sf::degrees(0.f)), angularVel(sf::degrees(0.f))
 {
     sf::Vector2u shipSize = ship.getTexture().getSize();
@@ -59,13 +59,12 @@ void Ship::update(sf::RenderWindow &window, sf::Time dt)
     exitWindow(window);
 }  
 
-void Ship::shoot(std::vector<std::unique_ptr<Bullet>> &bullets, sf::RenderWindow &window, sf::Texture &bulletTexture) const
+void Ship::shoot(sf::RenderWindow& window, std::vector<std::unique_ptr<Bullet>> &bullets, sf::Texture &bulletTexture) const
 {
-    float dir = ship.getRotation().asRadians();
-    float spawnX = ship.getPosition().x + width * std::cos(dir) / 2.f, spawnY = ship.getPosition().y + width * std::sin(dir) / 2.f;
     sf::Angle angle = ship.getRotation();
+    float spawnX = ship.getPosition().x + width * std::cos(angle.asRadians()) / 2.f, spawnY = ship.getPosition().y + width * std::sin(angle.asRadians()) / 2.f;
     
-    bullets.push_back(std::make_unique<Bullet>(bulletTexture, window, spawnX, spawnY, angle));
+    bullets.push_back(std::make_unique<Bullet>(bulletTexture, window, spawnX, spawnY, angle, vel));
 }
 
 void Ship::draw(sf::RenderWindow& window)

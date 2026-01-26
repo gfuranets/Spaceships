@@ -12,7 +12,7 @@ public:
     sf::Angle alpha, angularVel;
     sf::Sprite ship;
 
-    explicit Ship(sf::Texture& texture, sf::RenderWindow& window, float X, float Y);
+    explicit Ship(sf::RenderWindow& window, sf::Texture& texture, float X, float Y);
 
     virtual void move(sf::Time dt) = 0;
     virtual ~Ship() = default;
@@ -21,7 +21,7 @@ public:
     void exitWindow(sf::RenderWindow& window);
     void update(sf::RenderWindow& window, sf::Time dt);
 
-    void shoot(std::vector<std::unique_ptr<Bullet>>& bullets, sf::RenderWindow& window, sf::Texture& bulletTexture) const;
+    void shoot(sf::RenderWindow& window, std::vector<std::unique_ptr<Bullet>>& bullets, sf::Texture& bulletTexture, float bulletVel) const;
     void draw(sf::RenderWindow& window);
 };
 
