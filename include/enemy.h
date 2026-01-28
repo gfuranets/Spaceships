@@ -6,14 +6,18 @@
 #include <cmath>
 
 #include "ship.h"
-#include "player.h"
+#include "config.h"
+
+// forward declaration
+class Player;
+class Bullet;
 
 class Enemy : public Ship 
 {
 public:
 	bool collided;
 
-	explicit Enemy(sf::RenderWindow& window, sf::Texture& texture, float X, float Y);
+	explicit Enemy(sf::RenderWindow& window, sf::Texture& texture, float X, float Y, sf::Time timeCoolDown);
 
 	void move(sf::Time dt) override;
 	void bulletCollision(std::vector<std::unique_ptr<Bullet>>& playerBullets);

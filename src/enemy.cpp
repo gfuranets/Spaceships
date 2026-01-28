@@ -5,11 +5,12 @@
 #include "enemy.h"
 #include "ship.h"
 #include "player.h"
+#include "config.h"
 
-Enemy::Enemy(sf::RenderWindow& window, sf::Texture& texture, float X, float Y) :
-	Ship(window, texture, X, Y), collided(false)
+Enemy::Enemy(sf::RenderWindow& window, sf::Texture& texture, float X, float Y, sf::Time timeCoolDown) :
+	Ship(window, texture, X, Y, timeCoolDown), collided(false)
 {
-	vel = 50.f;
+	vel = GameConfig::ENEMY_VELOCITY;
 }
 
 void Enemy::move(sf::Time dt) 
@@ -52,12 +53,12 @@ void Enemy::getPlayerOrientation(sf::RenderWindow& window, Player& player, std::
 	if (std::abs(diff) < 0.05f)
 	{
 		angularVel = sf::radians(0.f);
-		shoot(window, enemyBullets, enemyBulletTexture, ENEMY_BULLET_VEL);
+		shoot(window, enemyBullets, enemyBulletTexture, GameConfig::ENEMY_BULLET_VELOCITY);
 	}
 	else
 	{
-		if (diff > 0) angularVel = sf::degrees(25.f);
-		else angularVel = sf::degrees(-25.f);
+		if (diff > 0) angularVel = GameConfig::ENEMY_ANGULAR_VEL;
+		else angularVel = -GameConfig::ENEMY_ANGULAR_VEL;
 	}
 	
 }

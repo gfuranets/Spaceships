@@ -4,15 +4,17 @@
 #include <SFML/Graphics.hpp>
 
 #include "bullet.h"
+#include "config.h"
 
 class Ship 
 {
 public:
     float vel, width, height;
     sf::Angle alpha, angularVel;
+    sf::Time timeSinceShot, timeCoolDown;
     sf::Sprite ship;
 
-    explicit Ship(sf::RenderWindow& window, sf::Texture& texture, float X, float Y);
+    explicit Ship(sf::RenderWindow& window, sf::Texture& texture, float X, float Y, sf::Time timeCoolDown);
 
     virtual void move(sf::Time dt) = 0;
     virtual ~Ship() = default;
@@ -21,7 +23,7 @@ public:
     void exitWindow(sf::RenderWindow& window);
     void update(sf::RenderWindow& window, sf::Time dt);
 
-    void shoot(sf::RenderWindow& window, std::vector<std::unique_ptr<Bullet>>& bullets, sf::Texture& bulletTexture, float bulletVel) const;
+    void shoot(sf::RenderWindow& window, std::vector<std::unique_ptr<Bullet>>& bullets, sf::Texture& bulletTexture, float bulletVelocity);
     void draw(sf::RenderWindow& window);
 };
 

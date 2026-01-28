@@ -1,12 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include <iostream>
 
 #include "ship.h"
 #include "bullet.h"
+#include "config.h"
 
-Ship::Ship(sf::RenderWindow& window, sf::Texture& texture, float X, float Y)
-    : ship(texture), vel(300.f), alpha(sf::degrees(0.f)), angularVel(sf::degrees(0.f))
+Ship::Ship(sf::RenderWindow& window, sf::Texture& texture, float X, float Y, sf::Time timeCoolDown)
+    : ship(texture), vel(0.f), alpha(sf::degrees(0.f)), angularVel(sf::degrees(0.f)), timeSinceShot(sf::seconds(0.f)), timeCoolDown(timeCoolDown)
 {
     sf::Vector2u shipSize = ship.getTexture().getSize();
 
@@ -54,17 +54,26 @@ void Ship::exitWindow(sf::RenderWindow& window)
 
 void Ship::update(sf::RenderWindow &window, sf::Time dt) 
 { 
+    timeSinceShot += dt;
+
     move(dt);
     rotate(dt); 
     exitWindow(window);
 }  
 
-void Ship::shoot(sf::RenderWindow& window, std::vector<std::unique_ptr<Bullet>> &bullets, sf::Texture &bulletTexture) const
+void Ship::shoot(sf::RenderWindow& window, std::vector<std::unique_ptr<Bullet>>& bullets, sf::Texture& bulletTexture, float bulletVelocity)
 {
-    sf::Angle angle = ship.getRotation();
-    float spawnX = ship.getPosition().x + width * std::cos(angle.asRadians()) / 2.f, spawnY = ship.getPosition().y + width * std::sin(angle.asRadians()) / 2.f;
-    
-    bullets.push_back(std::make_unique<Bullet>(bulletTexture, window, spawnX, spawnY, angle, vel));
+    if (timeSinceShot < timeCoolDown) return;
+
+    else
+    {
+        sf::Angle angle = ship.getRotation();
+        float spawnX = ship.getPosition().x + width * std::cos(angle.asRadians()) / 2.f, spawnY = ship.getPosition().y + width * std::sin(angle.asRadians()) / 2.f;
+
+        bullets.push_back(std::make_unique<Bullet>(bulletTexture, window, spawnX, spawnY, angle, bulletVelocity));
+    }
+
+    timeSinceShot = sf::Time::Zero;
 }
 
 void Ship::draw(sf::RenderWindow& window)
