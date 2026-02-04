@@ -20,7 +20,7 @@ void Enemy::move(sf::Time dt)
 	ship.move({ dir * vel * t });
 }
 
-void Enemy::bulletCollision(std::vector<std::unique_ptr<Bullet>>& playerBullets)
+void Enemy::bulletCollision(std::vector<std::unique_ptr<Bullet>>& playerBullets, Game& game)
 {
 	for (auto& bullet : playerBullets)
 	{
@@ -33,6 +33,7 @@ void Enemy::bulletCollision(std::vector<std::unique_ptr<Bullet>>& playerBullets)
 		{
 			bullet->collided = true;
 			collided = true;
+			game.score++;
 		}
 	}
 }
@@ -63,9 +64,9 @@ void Enemy::getPlayerOrientation(sf::RenderWindow& window, Player& player, std::
 	
 }
 
-void Enemy::update(sf::RenderWindow& window, sf::Time dt, Player& player, std::vector<std::unique_ptr<Bullet>>& playerBullets, std::vector<std::unique_ptr<Bullet>>& enemyBullets, sf::Texture& enemyBulletTexture)
+void Enemy::update(sf::RenderWindow& window, sf::Time dt, Player& player, std::vector<std::unique_ptr<Bullet>>& playerBullets, std::vector<std::unique_ptr<Bullet>>& enemyBullets, sf::Texture& enemyBulletTexture, Game& game)
 {
 	getPlayerOrientation(window, player, enemyBullets, enemyBulletTexture);
-	bulletCollision(playerBullets);
+	bulletCollision(playerBullets, game);
 	Ship::update(window, dt);
 }

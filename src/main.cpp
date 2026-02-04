@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
@@ -8,26 +7,31 @@
 #include "bullet.h"
 #include "gameLogic.h"
 #include "config.h" 
+#include "game.h"
 
 int main() 
 {
 	sf::RenderWindow window;
 	window.create(sf::VideoMode({ GameConfig::WINDOW_WIDTH, GameConfig::WINDOW_HEIGHT }),
-					"Spaceships",
-					sf::Style::Default,
-					sf::State::Windowed);
+				  "Spaceships",
+				  sf::Style::Default,
+				  sf::State::Windowed);
 
 	sf::Clock clock;
 	srand(2);
 
-	// TEXTURES
+	// TEXTURES AND FONT
 	sf::Texture playerTexture, enemyTexture, playerBulletTexture, enemyBulletTexture;
 	playerTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/player.png");
 	enemyTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/enemy.png");
 	playerBulletTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/playerBullet.png");
 	enemyBulletTexture.loadFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/enemyBullet.png");
 
+	sf::Font font;
+	font.openFromFile("C:/Users/furen/OneDrive/Dators/Programming/Projects/Spaceships/assets/fontArena.ttf");
+
 	// INITIALIZING GAME ENTITIES
+	Game game(font);
 	Player player(window, playerTexture, static_cast<float>(window.getSize().x) / 2.f, static_cast<float>(window.getSize().y) / 2.f, GameConfig::PLAYER_TIME_COOLDOWN);
 	std::vector<std::unique_ptr<Enemy>> enemies;
 	std::vector<std::unique_ptr<Bullet>> playerBullets;
@@ -54,13 +58,6 @@ int main()
 
 		if (player.hp <= 0.f) window.close();
 
-		// refresh enemies
-		while (enemies.size() < 5)
-		{
-			float X = static_cast<float>(rand() % window.getSize().x), Y = static_cast<float>(rand() % window.getSize().y);
-			enemies.push_back(std::make_unique<Enemy>(window, enemyTexture, X, Y, GameConfig::ENEMY_TIME_COOLDOWN));
-		}
-
 		// PLAYER MOVEMENT LOGIC
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
 			sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
@@ -78,29 +75,33 @@ int main()
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ||
 			sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-			player.direction = player.ship.getRotation();	
+			player.direction = player.ship.getRotation();
 
 		// GAME LOGIC
 		sf::Time dt = clock.restart();
 
 		player.update(window, dt, enemies, enemyBullets);
-		enemyUpdate(window, dt, player, enemies, playerBullets, enemyBullets, enemyBulletTexture);
+		enemyUpdate(window, dt, player, enemies, playerBullets, enemyBullets, enemyBulletTexture, game);
 		bulletUpdate(window, dt, playerBullets);
 		bulletUpdate(window, dt, enemyBullets);
+		game.update(player, enemies.size());
+
+		// refresh enemies
+		if (enemies.size() == 0)
+		{
+			while (enemies.size() <= game.maxEnemyCount)
+			{
+				float X = static_cast<float>(rand() % window.getSize().x), Y = static_cast<float>(rand() % window.getSize().y);
+				enemies.push_back(std::make_unique<Enemy>(window, enemyTexture, X, Y, GameConfig::ENEMY_TIME_COOLDOWN));
+			}
+		}
 		
 		// DISPLAYING
-
 		window.clear(sf::Color::Black);	
-		// std::cout << "x: " << player.ship.getPosition().x << " y: " << player.ship.getPosition().y << " alpha: " << player.ship.getRotation().asDegrees() << "\n";
 		
 		player.draw(window);
 		drawEntities(window, enemies, playerBullets, enemyBullets);
-
-		std::cout << player.hp << "\n";
-
-		// std::cout << player.width << " " << player.height << "\n";
-
-		// std::cout << "enemy count: " << enemies.size() << "\n";
+		game.draw(window);
 
 		window.display();
 	}	

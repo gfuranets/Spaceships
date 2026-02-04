@@ -9,11 +9,12 @@ namespace GameConfig
 	extern const unsigned int WINDOW_WIDTH;
 	extern const unsigned int WINDOW_HEIGHT;
 
-	// SHIPS MOVEMENT VARIABLES
+	// SHIPS VARIABLES
 	extern const float PLAYER_VELOCITY;
 	extern const float ENEMY_VELOCITY;
 	extern const sf::Angle PLAYER_ANGULAR_VEL;
 	extern const sf::Angle ENEMY_ANGULAR_VEL;
+	extern const int HP;
 
 	// BULLET VARIABLES
 	extern const float PLAYER_BULLET_VELOCITY;

@@ -5,8 +5,9 @@
 #include "enemy.h"
 #include "bullet.h"
 #include "player.h"
+#include "game.h"
 
-void enemyUpdate(sf::RenderWindow& window, sf::Time dt, Player& player, std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Bullet>>& playerBullets, std::vector<std::unique_ptr<Bullet>>& enemyBullets, sf::Texture& enemyBulletTexture)
+void enemyUpdate(sf::RenderWindow& window, sf::Time dt, Player& player, std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Bullet>>& playerBullets, std::vector<std::unique_ptr<Bullet>>& enemyBullets, sf::Texture& enemyBulletTexture, Game& game)
 {
 	for (auto enemy = enemies.begin(); enemy != enemies.end();)
 	{
@@ -17,7 +18,7 @@ void enemyUpdate(sf::RenderWindow& window, sf::Time dt, Player& player, std::vec
 		}
 		else
 		{
-			(*enemy)->update(window, dt, player, playerBullets, enemyBullets, enemyBulletTexture);
+			(*enemy)->update(window, dt, player, playerBullets, enemyBullets, enemyBulletTexture, game);
 			++enemy;
 		}
 	}
